@@ -5,8 +5,8 @@
 
 using namespace std;
 
-int main()
+int wmain(int argc, const wchar_t* argv[])
 {
-	cout << "Hello CMake." << endl;
+	wcout << L"Hello CMake." << endl;
 	return 0;
 }
