@@ -1,0 +1,208 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include <winres.h>
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// BatchCommands
+//
+
+IDR_CMD_GET_PR              BatchCommands          "../res/bat_get_pr.cmd"
+IDR_CMD_ENUM_REMOTES        BatchCommands          "../res/bat_enum_remotes.cmd"
+IDR_CMD_ENUM_BRANCHS        BatchCommands          "../res/bat_enum_branchs.cmd"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+IDI_APP_ICON                ICON                   "../res/app.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_DEL_CMD           "del /F /Q %1$s > NUL 2>&1"
+	IDS_ENTER_PRNUMBER    "Enter Pull Request Number:"
+	IDS_ENTER_BRANCH      "Select branch name:"
+	IDS_ENTER_REMOTE      "Select remote name:"
+	IDS_ENTER_GIT_DIR     "Enter path of Git Repository:"
+	IDS_BAD_ANSWER        "Bad answer!\r\n\r\nRetry . . . "
+	IDS_PRESS_ANY_KEY     "Press any key to continue . . . "
+END
+
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include <winres.h>\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Japanese (Japan) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "CompanyName", "berryzplus"
+            VALUE "FileDescription", "GitHub上のプルリクを簡単に取得します。"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "GitHubPR.exe"
+            VALUE "LegalCopyright", "Copyright (C) 2018 berryzplus"
+            VALUE "OriginalFilename", "GitHubPR.exe"
+            VALUE "ProductName", "GitHubPR"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 65001
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+	IDS_ENTER_PRNUMBER    "プルリクエスト番号を入力してください:"
+	IDS_ENTER_BRANCH      "ブランチ名を番号で選んでください:"
+	IDS_ENTER_REMOTE      "リモート名を番号で選んでください:"
+	IDS_ENTER_GIT_DIR     "Gitリポジトリのパスを入力してください:"
+	IDS_BAD_ANSWER        "入力に誤りがあります。\r\n\r\n再入力してください..."
+	IDS_PRESS_ANY_KEY     "続行するには何かキーを押してください..."
+END
+
+#endif    // Japanese (Japan) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName", "berryzplus"
+            VALUE "FileDescription", "Get Pull Request from GitHub easily."
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "GitHubPR.exe"
+            VALUE "LegalCopyright", "Copyright (C) 2018 berryzplus"
+            VALUE "OriginalFilename", "GitHubPR.exe"
+            VALUE "ProductName", "GitHubPR"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 65001
+    END
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
