@@ -14,7 +14,7 @@ set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${projectName})
 
 
 # setup pre-compiled header
-set(PreCompiledHeader ./include/StdAfx.h)
+set(PreCompiledHeader StdAfx.h)
 set(PreCompiledSource ./src/StdAfx.cpp)
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
   add_definitions(/Yu"${PreCompiledHeader}")
