@@ -29,7 +29,6 @@
 	throw std::runtime_error(message)
 
 
-std::wstring getCurrentDirectory();
 std::wstring loadString(_In_ WORD wStringResourceId);
 std::wstring getEnvStr(_In_z_ LPCWSTR pszVarName);
 std::wstring convertMbsToWString(_In_reads_z_(cchMbString) LPCSTR pszMbString, _In_ SIZE_T cchMbString);
