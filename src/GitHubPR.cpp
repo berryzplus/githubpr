@@ -202,7 +202,15 @@ std::wstring GitHubPrApp::_getPrNumber() const
 		}
 		std::wcout << loadString(IDS_BAD_ANSWER) << std::endl;
 	}
-	return std::to_wstring(ans);
+	std::wstring prNumber(std::to_wstring(ans));
+	std::wstring branchPrefix = getEnvStr(BRANCH_PREFIX);
+	std::wstring branchName = branchPrefix + L'/' + prNumber;
+	// set environment variable.
+	if (::_wputenv_s(L"BRANCH_NAME", branchName.c_str()))
+	{
+		THROW_APP_EXCEPTION("can't set environment value.");
+	}
+	return std::move(prNumber);
 }
 
 void GitHubPrApp::executeBatch() const

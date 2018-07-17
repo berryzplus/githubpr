@@ -1,6 +1,4 @@
 @echo off
-set BRANCH_NAME=%BRANCH_PREFIX%/%PR_NUMBER%
-
 git stash > NUL 2>&1
 git checkout %HOME_BRANCH% > NUL 2>&1
 git branch -D %BRANCH_NAME% > NUL 2>&1
