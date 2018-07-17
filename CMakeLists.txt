@@ -24,7 +24,7 @@ endif(CMAKE_GENERATOR MATCHES "Visual Studio")
 
 # define variables by file GLOB
 file(GLOB_RECURSE cppSources ./src/*.cpp)
-file(GLOB_RECURSE originalHeaders ./include/*.h)
+file(GLOB_RECURSE cppHeaders ./include/*.h)
 file(GLOB_RECURSE resourceScripts ./src/*.rc)
 
 # set include directories
@@ -34,7 +34,7 @@ include_directories(./include)
 add_definitions(-DWIN32 -D_WINDOWS -DUNICODE -D_UNICODE)
 
 # Add source to this project's executable.
-add_executable(${projectName} ${cppSources} ${originalHeaders} ${resourceScripts})
+add_executable(${projectName} ${cppSources} ${cppHeaders} ${resourceScripts})
 
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
