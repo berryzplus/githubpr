@@ -5,8 +5,6 @@
 #include "GitHubPR.h"
 
 
-#pragma comment(lib, "Shlwapi.lib")
-
 // 定数
 const WCHAR GITHUB_PR[] = L"GitHub PR";
 const WCHAR GIT_COMMAND_DIR[] = L"GIT_COMMAND_DIR";

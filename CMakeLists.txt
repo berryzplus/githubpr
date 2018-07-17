@@ -36,4 +36,7 @@ add_definitions(-DWIN32 -D_WINDOWS -DUNICODE -D_UNICODE)
 # Add source to this project's executable.
 add_executable(${projectName} ${cppSources} ${originalHeaders} ${resourceScripts})
 
+# add library modules
+target_link_libraries(${projectName} Shlwapi.lib)
+
 # TODO: Add tests and install targets if needed.
