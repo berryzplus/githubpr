@@ -27,14 +27,14 @@ file(GLOB_RECURSE cppSources ./src/*.cpp)
 file(GLOB_RECURSE cppHeaders ./include/*.h)
 file(GLOB_RECURSE resourceScripts ./src/*.rc)
 
+# Add source to this project's executable.
+add_executable(${projectName} ${cppSources} ${cppHeaders} ${resourceScripts})
+
 # set include directories
 include_directories(./include)
 
 # add definitions
 add_definitions(-DWIN32 -D_WINDOWS -DUNICODE -D_UNICODE)
-
-# Add source to this project's executable.
-add_executable(${projectName} ${cppSources} ${cppHeaders} ${resourceScripts})
 
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
