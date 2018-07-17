@@ -28,7 +28,7 @@ include_directories(./include)
 set(PreCompiledHeader StdAfx.h)
 set(PreCompiledSource ./src/StdAfx.cpp)
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
-  add_definitions(/Yu"${PreCompiledHeader}")
+  set_source_files_properties(${cppSources} PPROPERTIES COMPILE_FLAGS /Yu"${PreCompiledHeader}")
   set_source_files_properties(${PreCompiledSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
 endif(CMAKE_GENERATOR MATCHES "Visual Studio")
 
