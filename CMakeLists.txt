@@ -30,7 +30,7 @@ file(GLOB_RECURSE resourceScripts ./src/*.rc)
 # set include directories
 include_directories(./include)
 
-# add primary definitions
+# add definitions
 add_definitions(-DWIN32 -D_WINDOWS -DUNICODE -D_UNICODE)
 
 # Add source to this project's executable.
