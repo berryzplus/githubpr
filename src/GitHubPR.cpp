@@ -91,6 +91,15 @@ std::wstring GitHubPrApp::_getGitCommandDir() const
 	if (!::PathFileExists(gitCommandDir.c_str())) {
 		THROW_APP_EXCEPTION("GNU Git not found.");
 	}
+	std::wstring path = getEnvStr(L"PATH");
+	if (0 != ::_wcsnicmp(gitCommandDir.c_str(), path.c_str(), gitCommandDir.length())) {
+		path = gitCommandDir + L';' + path;
+		// set environment variable.
+		if (::_wputenv_s(L"PATH", path.c_str()))
+		{
+			THROW_APP_EXCEPTION("can't set environment value.");
+		}
+	}
 	return std::move(gitCommandDir);
 }
 

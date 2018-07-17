@@ -1,6 +1,4 @@
 @echo off
-path=%GIT_COMMAND_DIR%;%path%
-
 set BRANCH_NAME=%BRANCH_PREFIX%/%PR_NUMBER%
 
 git stash > NUL 2>&1
