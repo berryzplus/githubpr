@@ -24,8 +24,14 @@ PrivateProfile& PrivateProfile::operator = (_Inout_ _Myt &&rhs) noexcept
 
 std::wstring PrivateProfile::getString(_In_z_ LPCWSTR appName, _In_z_ LPCWSTR keyName, _In_opt_z_ LPCWSTR pDefault)
 {
+	//moveで抜け殻になる対策
+	if (_buffer.size() == 0 && 0 < _buffer.capacity()) {
+		_buffer._Eos(1);
+		_buffer.at(0) = '\0';
+	}
 	SIZE_T cbLoad = 0;
 	for (;;) {
+		
 		// INIファイルの項目を取得
 		cbLoad = ::GetPrivateProfileString(appName, keyName, pDefault, &*_buffer.begin(), static_cast<DWORD>(_buffer.capacity()), _profileName);
 
