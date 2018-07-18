@@ -5,6 +5,10 @@
 #include "PrivateProfile.h"
 #include "BatchCommand.h"
 
+// 定数
+extern const WCHAR GITHUB_PR[];
+
+
 class GitHubPrApp {
 	PrivateProfile profile;
 	std::wstring gitCommandDir;

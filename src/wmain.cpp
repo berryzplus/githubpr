@@ -5,9 +5,6 @@
 #include "generic.h"
 
 
-// 定数
-const WCHAR GITHUB_PR[] = L"GitHub PR";
-
 int wmain(int argc, WCHAR* argv[])
 {
 	GitHubPrApp app;
