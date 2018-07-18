@@ -18,6 +18,16 @@ std::wstring getEnvStr(_In_z_ LPCWSTR pszVarName)
 	return std::wstring();
 }
 
+// set environment variable.
+void setEnvStr(_In_z_ LPCWSTR pszVarName, _In_z_ LPCWSTR pszValue)
+{
+	// set environment variable.
+	if (::_wputenv_s(pszVarName, pszValue))
+	{
+		THROW_APP_EXCEPTION("can't set environment value.");
+	}
+}
+
 // load string from resource.
 std::wstring loadString(_In_ WORD wStringResourceId)
 {

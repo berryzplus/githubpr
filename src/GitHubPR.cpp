@@ -69,11 +69,7 @@ std::wstring GitHubPrApp::_initSetting(
 				profile.writeString(GITHUB_PR, keyName, setting.c_str());
 			}
 		}
-		// set environment variable.
-		if (::_wputenv_s(keyName, setting.c_str()))
-		{
-			THROW_APP_EXCEPTION("can't set environment value.");
-		}
+		setEnvStr(keyName, setting.c_str());
 	}
 	return std::move(setting);
 }
@@ -94,11 +90,7 @@ std::wstring GitHubPrApp::_getGitCommandDir() const
 	std::wstring path = getEnvStr(L"PATH");
 	if (0 != ::_wcsnicmp(gitCommandDir.c_str(), path.c_str(), gitCommandDir.length())) {
 		path = gitCommandDir + L';' + path;
-		// set environment variable.
-		if (::_wputenv_s(L"PATH", path.c_str()))
-		{
-			THROW_APP_EXCEPTION("can't set environment value.");
-		}
+		setEnvStr(L"PATH", path.c_str());
 	}
 	return std::move(gitCommandDir);
 }
@@ -205,11 +197,7 @@ std::wstring GitHubPrApp::_getPrNumber() const
 	std::wstring prNumber(std::to_wstring(ans));
 	std::wstring branchPrefix = getEnvStr(BRANCH_PREFIX);
 	std::wstring branchName = branchPrefix + L'/' + prNumber;
-	// set environment variable.
-	if (::_wputenv_s(L"BRANCH_NAME", branchName.c_str()))
-	{
-		THROW_APP_EXCEPTION("can't set environment value.");
-	}
+	setEnvStr(L"BRANCH_NAME", branchName.c_str());
 	return std::move(prNumber);
 }
 
