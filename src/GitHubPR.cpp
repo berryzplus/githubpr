@@ -4,6 +4,8 @@
 #include "StdAfx.h"
 #include "GitHubPR.h"
 
+#include "generic.h"
+
 
 // 定数
 const WCHAR GITHUB_PR[] = L"GitHub PR";

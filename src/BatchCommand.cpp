@@ -2,6 +2,8 @@
 #include "StdAfx.h"
 #include "BatchCommand.h"
 
+#include "generic.h"
+
 
 BatchCommand::BatchCommand(_In_ WORD wBatchResourceId)
 	: wID(wBatchResourceId)

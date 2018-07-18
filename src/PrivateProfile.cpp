@@ -2,6 +2,9 @@
 #include "StdAfx.h"
 #include "PrivateProfile.h"
 
+#include "generic.h"
+
+
 PrivateProfile::PrivateProfile(_In_ const std::wstring &profileName)
 	: _profileName(profileName.c_str())
 	, _buffer(0x100, '\0')

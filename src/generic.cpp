@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "generic.h"
 
 // get environment variable.
 std::wstring getEnvStr(_In_z_ LPCWSTR pszVarName)
