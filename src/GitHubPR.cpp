@@ -47,10 +47,10 @@ void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 	profile = std::move(PrivateProfile(profileName));
 
 	constexpr bool skipSave = true;
-	gitCommandDir = _initSetting(GIT_COMMAND_DIR, [this]() {return _getGitCommandDir(); });
-	gitRemoteName = _initSetting(GIT_REMOTE_NAME, [this]() {return _getRemoteName(); });
-	branchPrefix = _initSetting(BRANCH_PREFIX, [this]() {return _getBranchPrefix(); });
-	homeBranch = _initSetting(HOME_BRANCH, [this]() {return _getHomeBranch(); });
+	gitCommandDir = _initSetting(GIT_COMMAND_DIR, [this]() {return _getGitCommandDir(); }, skipSave);
+	gitRemoteName = _initSetting(GIT_REMOTE_NAME, [this]() {return _getRemoteName(); }, skipSave);
+	branchPrefix = _initSetting(BRANCH_PREFIX, [this]() {return _getBranchPrefix(); }, skipSave);
+	homeBranch = _initSetting(HOME_BRANCH, [this]() {return _getHomeBranch(); }, skipSave);
 	prNumber = _initSetting(PR_NUMBER, [this]() {return _getPrNumber(); }, skipSave);
 }
 
