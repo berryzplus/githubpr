@@ -22,18 +22,23 @@ file(GLOB_RECURSE resourceScripts src/*.rc)
 add_executable(${projectName} ${cppSources} ${cppHeaders} ${resourceScripts})
 
 # setup pre-compiled header
-set(PreCompiledHeader StdAfx.h)
-set(PreCompiledSource src/StdAfx.cpp)
-if (CMAKE_GENERATOR MATCHES "Visual Studio")
-  set_source_files_properties(${cppSources} PPROPERTIES COMPILE_FLAGS /Yu"${PreCompiledHeader}")
-  set_source_files_properties(${PreCompiledSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
-endif(CMAKE_GENERATOR MATCHES "Visual Studio")
+function(make_pre_compiled_header _preCompiledHeaderName _preCompiledSourceName _cppSources)
+  set(PreCompiledHeader _preCompiledHeaderName)
+  if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    set(PreCompiledSource _preCompiledSourceName)
+    set_source_files_properties(_cppSources PPROPERTIES COMPILE_FLAGS /Yu"${PreCompiledHeader}")
+    set_source_files_properties(${PreCompiledSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
+  endif(CMAKE_GENERATOR MATCHES "Visual Studio")
+endfunction(make_pre_compiled_header)
 
 # add definitions
 target_compile_definitions(${projectName} PUBLIC _CONSOLE UNICODE _UNICODE)
 
 # add include directories
 target_include_directories(${projectName} PRIVATE include)
+
+# Add source to this project's executable.
+make_pre_compiled_header(StdAfx.h src/StdAfx.cpp ${cppSources})
 
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
