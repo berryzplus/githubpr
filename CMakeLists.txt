@@ -3,6 +3,17 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+# setup pre-compiled header
+function(make_pre_compiled_header _preCompiledHeaderName _preCompiledSourceName _cppSources)
+  set(PreCompiledHeader _preCompiledHeaderName)
+  if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    set(PreCompiledSource _preCompiledSourceName)
+    set_source_files_properties(_cppSources PPROPERTIES COMPILE_FLAGS /Yu"${PreCompiledHeader}")
+    set_source_files_properties(${PreCompiledSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
+  endif(CMAKE_GENERATOR MATCHES "Visual Studio")
+endfunction(make_pre_compiled_header)
+
+
 # define a variable of project name
 set(projectName GitHubPR)
 
@@ -20,16 +31,6 @@ file(GLOB_RECURSE resourceScripts src/*.rc)
 
 # Add source to this project's executable.
 add_executable(${projectName} ${cppSources} ${cppHeaders} ${resourceScripts})
-
-# setup pre-compiled header
-function(make_pre_compiled_header _preCompiledHeaderName _preCompiledSourceName _cppSources)
-  set(PreCompiledHeader _preCompiledHeaderName)
-  if (CMAKE_GENERATOR MATCHES "Visual Studio")
-    set(PreCompiledSource _preCompiledSourceName)
-    set_source_files_properties(_cppSources PPROPERTIES COMPILE_FLAGS /Yu"${PreCompiledHeader}")
-    set_source_files_properties(${PreCompiledSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
-  endif(CMAKE_GENERATOR MATCHES "Visual Studio")
-endfunction(make_pre_compiled_header)
 
 # add definitions
 target_compile_definitions(${projectName} PUBLIC _CONSOLE UNICODE _UNICODE)
