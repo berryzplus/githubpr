@@ -4,14 +4,12 @@
 cmake_minimum_required (VERSION 3.8)
 
 # setup pre-compiled header
-function(use_pre_compiled_header _preCompiledHeaderName _preCompiledSourceName _cppSources)
-  set(PreCompiledHeader _preCompiledHeaderName)
-  if (CMAKE_GENERATOR MATCHES "Visual Studio")
-    set(PreCompiledSource _preCompiledSourceName)
-    set_source_files_properties(_cppSources PPROPERTIES COMPILE_FLAGS /Yu"${PreCompiledHeader}")
-    set_source_files_properties(${PreCompiledSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
-  endif(CMAKE_GENERATOR MATCHES "Visual Studio")
-endfunction(use_pre_compiled_header)
+function(target_use_pre_compile_header projectName PreCompiledHeader PreCompiledHeaderSource)
+	if (CMAKE_GENERATOR MATCHES "Visual Studio")
+		target_compile_options(${projectName} BEFORE PRIVATE /Yu"${PreCompiledHeader}")
+		set_source_files_properties(${PreCompiledHeaderSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
+	endif(CMAKE_GENERATOR MATCHES "Visual Studio")
+endfunction(target_use_pre_compile_header)
 
 
 # define a variable of project name
@@ -23,14 +21,13 @@ project (${projectName})
 # set the project as the startup project
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${projectName})
 
-
 # define variables by file GLOB
-file(GLOB_RECURSE cppSources src/*.cpp)
 file(GLOB_RECURSE cppHeaders include/*.h)
+file(GLOB_RECURSE cppSources src/*.cpp)
 file(GLOB_RECURSE resourceScripts src/*.rc)
 
 # Add source to this project's executable.
-add_executable(${projectName} ${cppSources} ${cppHeaders} ${resourceScripts})
+add_executable(${projectName} ${cppHeaders} ${cppSources} ${resourceScripts})
 
 # add definitions
 target_compile_definitions(${projectName} PUBLIC _CONSOLE UNICODE _UNICODE)
@@ -38,8 +35,8 @@ target_compile_definitions(${projectName} PUBLIC _CONSOLE UNICODE _UNICODE)
 # add include directories
 target_include_directories(${projectName} PRIVATE include)
 
-# Add source to this project's executable.
-use_pre_compiled_header(StdAfx.h src/StdAfx.cpp ${cppSources})
+# add pre-compiled header to executable.
+target_use_pre_compile_header(${projectName} StdAfx.h src/StdAfx.cpp)
 
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
