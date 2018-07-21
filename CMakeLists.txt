@@ -33,7 +33,7 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
 endif(CMAKE_GENERATOR MATCHES "Visual Studio")
 
 # add definitions
-add_definitions(-DWIN32 -D_WINDOWS -DUNICODE -D_UNICODE)
+target_compile_definitions(${projectName} PUBLIC _CONSOLE UNICODE _UNICODE)
 
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
