@@ -21,9 +21,6 @@ file(GLOB_RECURSE resourceScripts src/*.rc)
 # Add source to this project's executable.
 add_executable(${projectName} ${cppSources} ${cppHeaders} ${resourceScripts})
 
-# set include directories
-include_directories(include)
-
 # setup pre-compiled header
 set(PreCompiledHeader StdAfx.h)
 set(PreCompiledSource src/StdAfx.cpp)
@@ -34,6 +31,9 @@ endif(CMAKE_GENERATOR MATCHES "Visual Studio")
 
 # add definitions
 target_compile_definitions(${projectName} PUBLIC _CONSOLE UNICODE _UNICODE)
+
+# add include directories
+target_include_directories(${projectName} PRIVATE include)
 
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
