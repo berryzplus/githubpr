@@ -14,19 +14,19 @@ set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${projectName})
 
 
 # define variables by file GLOB
-file(GLOB_RECURSE cppSources ./src/*.cpp)
-file(GLOB_RECURSE cppHeaders ./include/*.h)
-file(GLOB_RECURSE resourceScripts ./src/*.rc)
+file(GLOB_RECURSE cppSources src/*.cpp)
+file(GLOB_RECURSE cppHeaders include/*.h)
+file(GLOB_RECURSE resourceScripts src/*.rc)
 
 # Add source to this project's executable.
 add_executable(${projectName} ${cppSources} ${cppHeaders} ${resourceScripts})
 
 # set include directories
-include_directories(./include)
+include_directories(include)
 
 # setup pre-compiled header
 set(PreCompiledHeader StdAfx.h)
-set(PreCompiledSource ./src/StdAfx.cpp)
+set(PreCompiledSource src/StdAfx.cpp)
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
   set_source_files_properties(${cppSources} PPROPERTIES COMPILE_FLAGS /Yu"${PreCompiledHeader}")
   set_source_files_properties(${PreCompiledSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
