@@ -44,4 +44,5 @@ target_use_pre_compile_header(${projectName} StdAfx.h src/StdAfx.cpp)
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
 
-# TODO: Add tests and install targets if needed.
+# add tests
+add_subdirectory(test)
