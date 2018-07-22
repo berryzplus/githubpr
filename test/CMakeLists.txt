@@ -10,6 +10,9 @@ find_package(GTest QUIET)
 if (NOT GTEST_FOUND)
   message(FATAL ": google test not found.")
 
+  # add tests
+  add_subdirectory(googletest)
+
   # find google test(REQUIRED)
   #find_package(GTest REQUIRED)
 
