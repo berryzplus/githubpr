@@ -5,10 +5,13 @@ cmake_minimum_required (VERSION 3.8)
 
 # setup pre-compiled header
 function(target_use_pre_compile_header projectName PreCompiledHeader PreCompiledHeaderSource)
-	if (CMAKE_GENERATOR MATCHES "Visual Studio")
-		target_compile_options(${projectName} BEFORE PRIVATE /Yu"${PreCompiledHeader}")
-		set_source_files_properties(${PreCompiledHeaderSource} PPROPERTIES COMPILE_FLAGS /Yc"${PreCompiledHeader}")
-	endif(CMAKE_GENERATOR MATCHES "Visual Studio")
+  if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    target_compile_options(${projectName} PRIVATE /Yu"${PreCompiledHeader}")
+	set_source_files_properties(${PreCompiledHeaderSource}
+      PROPERTIES
+        COMPILE_FLAGS /Yc"${PreCompiledHeader}"
+    )
+  endif(CMAKE_GENERATOR MATCHES "Visual Studio")
 endfunction(target_use_pre_compile_header)
 
 
