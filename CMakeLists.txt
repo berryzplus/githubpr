@@ -3,6 +3,12 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+# CMake compile with /MT instead of /MD
+# https://stackoverflow.com/questions/14172856/cmake-compile-with-mt-instead-of-md
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+
+
 # setup pre-compiled header
 function(target_use_pre_compile_header projectName PreCompiledHeader PreCompiledHeaderSource)
   if (CMAKE_GENERATOR MATCHES "Visual Studio")
@@ -24,6 +30,9 @@ project (${projectName})
 # set the project as the startup project
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${projectName})
 
+# turn on solution folder
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 # define variables by file GLOB
 file(GLOB_RECURSE cppHeaders include/*.h)
 file(GLOB_RECURSE cppSources src/*.cpp)
@@ -44,5 +53,28 @@ target_use_pre_compile_header(${projectName} StdAfx.h src/StdAfx.cpp)
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
 
-# add tests
+# create solution folder
+set_target_properties(${projectName} PROPERTIES FOLDER executable)
+
+
+# add google test
+add_subdirectory(googletest)
+
+# create solution folder
+set_target_properties(gmock PROPERTIES FOLDER GoogleTest)
+set_target_properties(gmock_main PROPERTIES FOLDER GoogleTest)
+set_target_properties(gtest PROPERTIES FOLDER GoogleTest)
+set_target_properties(gtest_main PROPERTIES FOLDER GoogleTest)
+
+# add test directory
 add_subdirectory(test)
+
+# create solution folder
+set_target_properties(GitHubPrUnitTest PROPERTIES FOLDER unitTest)
+
+
+# enable testing
+enable_testing()
+
+# add test
+add_test(NAME unitTest COMMAND GitHubPrUnitTest)

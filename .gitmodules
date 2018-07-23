@@ -1,4 +1,4 @@
-[submodule "test/googletest"]
-	path = test/googletest
+[submodule "googletest"]
+	path = googletest
 	url = https://github.com/berryzplus/googletest.git
 	branch = feature/suppress_waring_C4819

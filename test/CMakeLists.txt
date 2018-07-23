@@ -3,17 +3,24 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-# try to find google test
-# https://cmake.org/cmake/help/v3.11/module/FindGTest.html
-find_package(GTest QUIET)
+# define a variable of project name
+set(testName GitHubPrUnitTest)
 
-if (NOT GTEST_FOUND)
-  message(FATAL ": google test not found.")
+# define a project name
+project (${testName})
 
-  # add tests
-  add_subdirectory(googletest)
+# define variables by file GLOB
+file(GLOB testSources *.cpp)
+file(GLOB testHeaders *.h)
 
-  # find google test(REQUIRED)
-  #find_package(GTest REQUIRED)
+# Add source to this project's executable.
+add_executable(${testName} ${testHeaders} ${testSources})
 
-endif (NOT GTEST_FOUND)
+# add definitions
+target_compile_definitions(${testName} PUBLIC _CONSOLE UNICODE _UNICODE)
+
+# add pre-compiled header to executable.
+target_use_pre_compile_header(${testName} pch.h pch.cpp)
+
+# add library modules
+target_link_libraries(${testName} gtest gtest_main)
