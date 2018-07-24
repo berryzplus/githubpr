@@ -50,8 +50,8 @@ void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 	gitCommandDir = _initSetting(GIT_COMMAND_DIR, [this]() {return _getGitCommandDir(); }, skipSave);
 	gitRemoteName = _initSetting(GIT_REMOTE_NAME, [this]() {return _getRemoteName(); }, skipSave);
 	branchPrefix = _initSetting(BRANCH_PREFIX, [this]() {return _getBranchPrefix(); }, skipSave);
-	homeBranch = _initSetting(HOME_BRANCH, [this]() {return _getHomeBranch(); }, skipSave);
 	prNumber = _initSetting(PR_NUMBER, [this]() {return _getPrNumber(); }, skipSave);
+	homeBranch = _initSetting(HOME_BRANCH, [this]() {return _getHomeBranch(); }, skipSave);
 }
 
 std::wstring GitHubPrApp::_initSetting(
@@ -138,6 +138,25 @@ std::wstring GitHubPrApp::_getBranchPrefix() const
 	return L"pull-request";
 }
 
+std::wstring GitHubPrApp::_getPrNumber() const
+{
+	int ans = 0;
+	for (;;) {
+		std::wcout << loadString(IDS_ENTER_PRNUMBER) << std::endl;
+		std::wcin >> ans;
+		std::wcin.get();
+		if (0 < ans) {
+			break;
+		}
+		std::wcout << loadString(IDS_BAD_ANSWER) << std::endl;
+	}
+	std::wstring prNumber(std::to_wstring(ans));
+	std::wstring branchPrefix = getEnvStr(BRANCH_PREFIX);
+	std::wstring branchName = branchPrefix + L'/' + prNumber;
+	setEnvStr(L"BRANCH_NAME", branchName.c_str());
+	return std::move(prNumber);
+}
+
 std::wstring GitHubPrApp::_getHomeBranch() const
 {
 	std::list<std::wstring> branchs;
@@ -182,25 +201,6 @@ std::wstring GitHubPrApp::_getHomeBranch() const
 		std::wcout << loadString(IDS_BAD_ANSWER) << std::endl;
 	}
 	return std::move(branchVector.at(ans - 1));
-}
-
-std::wstring GitHubPrApp::_getPrNumber() const
-{
-	int ans = 0;
-	for (;;) {
-		std::wcout << loadString(IDS_ENTER_PRNUMBER) << std::endl;
-		std::wcin >> ans;
-		std::wcin.get();
-		if (0 < ans) {
-			break;
-		}
-		std::wcout << loadString(IDS_BAD_ANSWER) << std::endl;
-	}
-	std::wstring prNumber(std::to_wstring(ans));
-	std::wstring branchPrefix = getEnvStr(BRANCH_PREFIX);
-	std::wstring branchName = branchPrefix + L'/' + prNumber;
-	setEnvStr(L"BRANCH_NAME", branchName.c_str());
-	return std::move(prNumber);
 }
 
 void GitHubPrApp::executeBatch() const

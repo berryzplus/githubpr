@@ -30,6 +30,6 @@ private:
 	std::wstring _getGitCommandDir() const;
 	std::wstring _getRemoteName() const;
 	std::wstring _getBranchPrefix() const;
-	std::wstring _getHomeBranch() const;
 	std::wstring _getPrNumber() const;
+	std::wstring _getHomeBranch() const;
 };
