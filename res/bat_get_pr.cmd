@@ -1,6 +1,5 @@
 @echo off
-git checkout %BRANCH_NAME% > NUL 2>&1
-IF ERRORLEVEL 1 (
+IF "%CURRENT_BRANCH%" == "" (
   git fetch %GIT_REMOTE_NAME% pull/%PR_NUMBER%/head:%BRANCH_NAME%
   git checkout %BRANCH_NAME%
 ) ELSE (

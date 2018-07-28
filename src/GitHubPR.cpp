@@ -51,7 +51,16 @@ void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 	gitRemoteName = _initSetting(GIT_REMOTE_NAME, [this]() {return _getRemoteName(); }, skipSave);
 	branchPrefix = _initSetting(BRANCH_PREFIX, [this]() {return _getBranchPrefix(); }, skipSave);
 	prNumber = _initSetting(PR_NUMBER, [this]() {return _getPrNumber(); }, skipSave);
-	homeBranch = _initSetting(HOME_BRANCH, [this]() {return _getHomeBranch(); }, skipSave);
+
+	{
+		BatchCommand cmd(IDR_CMD_CHECKOUT_BRANCH);
+		auto retList = std::move(cmd.invokeAndGetLines());
+		currentBranch = std::move(retList.back());
+	}
+	if (!currentBranch.empty()) {
+		setEnvStr(L"CURRENT_BRANCH", currentBranch.c_str());
+		homeBranch = _initSetting(HOME_BRANCH, [this]() {return _getHomeBranch(); }, skipSave);
+	}
 }
 
 std::wstring GitHubPrApp::_initSetting(

@@ -16,6 +16,7 @@ class GitHubPrApp {
 	std::wstring homeBranch;
 	std::wstring branchPrefix;
 	std::wstring prNumber;
+	std::wstring currentBranch;
 
 public:
 	void initSettings(_In_ const std::wstring &targetDir);
