@@ -57,6 +57,35 @@ target_link_libraries(${projectName} Shlwapi.lib)
 set_target_properties(${projectName} PROPERTIES FOLDER executable)
 
 
+# define a variable of project name
+set(libName GitHubPRTestLib)
+
+# define variables by file GLOB
+file(GLOB_RECURSE libHeaders include/*.h)
+file(GLOB_RECURSE libSources src/*.cpp)
+
+# exclude wmain from libSources
+list(FILTER libSources EXCLUDE REGEX ".*wmain.cpp$")
+
+# Add source to this project's executable.
+add_library(${libName} STATIC ${libHeaders} ${libSources})
+
+# add definitions
+target_compile_definitions(${libName} PUBLIC _CONSOLE UNICODE _UNICODE)
+
+# add include directories
+target_include_directories(${libName} PRIVATE include)
+
+# add pre-compiled header to executable.
+target_use_pre_compile_header(${libName} StdAfx.h src/StdAfx.lib)
+
+# add library modules
+target_link_libraries(${libName} Shlwapi.lib)
+
+# create solution folder
+set_target_properties(${libName} PROPERTIES FOLDER unitTest)
+
+
 # add google test
 add_subdirectory(googletest)
 
