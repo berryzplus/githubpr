@@ -42,7 +42,6 @@ IDI_APP_ICON                ICON                   "../res/app.ico"
 
 STRINGTABLE
 BEGIN
-    IDS_DEL_CMD           "del /F /Q %1$s > NUL 2>&1"
 	IDS_ENTER_PRNUMBER    "Enter Pull Request Number:"
 	IDS_ENTER_BRANCH      "Select branch name:"
 	IDS_ENTER_REMOTE      "Select remote name:"

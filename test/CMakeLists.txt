@@ -23,4 +23,4 @@ target_compile_definitions(${testName} PUBLIC _CONSOLE UNICODE _UNICODE)
 target_use_pre_compile_header(${testName} StdAfx.h StdAfx.cpp)
 
 # add library modules
-target_link_libraries(${testName} gtest gtest_main GitHubPRTestLib)
+target_link_libraries(${testName} gtest gtest_main LibGitHubPR)

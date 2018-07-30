@@ -3,6 +3,8 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+include(GNUInstallDirs)
+
 # CMake compile with /MT instead of /MD
 # https://stackoverflow.com/questions/14172856/cmake-compile-with-mt-instead-of-md
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
@@ -58,32 +60,49 @@ set_target_properties(${projectName} PROPERTIES FOLDER executable)
 
 
 # define a variable of project name
-set(libName GitHubPRTestLib)
+set(libName LibGitHubPR)
 
 # define variables by file GLOB
 file(GLOB_RECURSE libHeaders include/*.h)
 file(GLOB_RECURSE libSources src/*.cpp)
+#file(GLOB_RECURSE resourceScripts src/*.rc)
 
 # exclude wmain from libSources
 list(FILTER libSources EXCLUDE REGEX ".*wmain.cpp$")
 
 # Add source to this project's executable.
-add_library(${libName} STATIC ${libHeaders} ${libSources})
+add_library(${libName} STATIC ${libHeaders} ${libSources} ${resourceScripts})
 
 # add definitions
 target_compile_definitions(${libName} PUBLIC _CONSOLE UNICODE _UNICODE)
 
 # add include directories
-target_include_directories(${libName} PRIVATE include)
+target_include_directories(${libName} PUBLIC include)
 
 # add pre-compiled header to executable.
-target_use_pre_compile_header(${libName} StdAfx.h src/StdAfx.lib)
+target_use_pre_compile_header(${libName} StdAfx.h src/StdAfx.cpp)
 
 # add library modules
 target_link_libraries(${libName} Shlwapi.lib)
 
 # create solution folder
 set_target_properties(${libName} PROPERTIES FOLDER unitTest)
+
+# Install rules
+install(TARGETS ${libName}
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+install(DIRECTORY  "${SOURCE_DIR}/include"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+
+# configure and install pkgconfig files
+configure_file(
+  cmake/${libName}.pc.in
+  "${CMAKE_BINARY_DIR}/${libName}.pc"
+  @ONLY)
+install(FILES "${CMAKE_BINARY_DIR}/${libName}.pc"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 
 # add google test

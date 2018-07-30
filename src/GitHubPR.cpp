@@ -54,7 +54,7 @@ void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 
 	{
 		BatchCommand cmd(IDR_CMD_CHECKOUT_BRANCH);
-		auto retList = std::move(cmd.invokeAndGetLines());
+		auto retList = cmd.invokeAndGetLines();
 		currentBranch = std::move(retList.back());
 	}
 	if (!currentBranch.empty()) {
@@ -171,7 +171,7 @@ std::wstring GitHubPrApp::_getHomeBranch() const
 	std::list<std::wstring> branchs;
 	{
 		BatchCommand cmd(IDR_CMD_ENUM_BRANCHS);
-		branchs = std::move(cmd.invokeAndGetLines());
+		branchs = cmd.invokeAndGetLines();
 		branchs.remove(L"");
 		std::wregex reBranch(L"^\\*?\\s+(.+)$");
 		std::wsmatch match;
@@ -216,6 +216,6 @@ void GitHubPrApp::executeBatch() const
 {
 	//バッチファイルを実行する
 	BatchCommand cmd(IDR_CMD_GET_PR);
-	std::list<std::wstring> lines(cmd.invokeAndGetLines());
+	auto lines(cmd.invokeAndGetLines());
 	std::for_each(lines.cbegin(), lines.cend(), [](const std::wstring &line) {std::wcout << line << std::endl; });
 }

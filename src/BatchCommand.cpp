@@ -6,10 +6,17 @@
 
 
 BatchCommand::BatchCommand(_In_ WORD wBatchResourceId)
-	: wID(wBatchResourceId)
 {
+	batContent = loadBatchContent(wBatchResourceId);
 	batName = generateBatchName();
-	generateBatchFile();
+}
+
+BatchCommand::BatchCommand(_In_opt_ const std::wstring& batchContent)
+{
+	batContent = std::move(batchContent);
+	if (!batContent.empty()) {
+		batName = generateBatchName();
+	}
 }
 
 // バッチ名を生成する
@@ -22,30 +29,39 @@ std::wstring BatchCommand::generateBatchName()
 	return std::wstring(fnTemplate);
 }
 
-// バッチファイルを生成する
-void BatchCommand::generateBatchFile()
+// リソースからバッチ内容を読み込む
+std::wstring BatchCommand::loadBatchContent(_In_ WORD wBatchResourceId)
 {
-	HRSRC hres = ::FindResource(NULL, MAKEINTRESOURCE(wID), (LPCWSTR)L"BatchCommands");
+	HRSRC hres = ::FindResource(NULL, MAKEINTRESOURCE(wBatchResourceId), (LPCWSTR)L"BatchCommands");
 	if (!hres) {
 		THROW_APP_EXCEPTION("resource not found.");
 	}
 	const SIZE_T cbResData = ::SizeofResource(NULL, hres);
 	HGLOBAL hResData = ::LoadResource(NULL, hres);
 	if (!hResData) {
-		THROW_APP_EXCEPTION("lock resource failed.");
+		THROW_APP_EXCEPTION("load resource failed.");
 	}
 	LPCSTR pResData = static_cast<LPSTR>(::LockResource(hResData));
+	if (!pResData) {
+		THROW_APP_EXCEPTION("lock resource failed.");
+	}
 	std::wstring batchContent(convertMbsToWString(pResData, cbResData));
 	UnlockResource(hResData);
 
-	std::wofstream os(batName);
-	os.write(batchContent.c_str(), batchContent.length());
-	os.close();
+	return std::move(batchContent);
 }
 
 //バッチを実行してストリームを取得する
 std::wifstream BatchCommand::invokeAndGetStream()
 {
+	if (batName.empty()) {
+		THROW_APP_EXCEPTION("batch has no content.");
+	}
+
+	std::wofstream os(batName);
+	os.write(batContent.c_str(), batContent.length());
+	os.close();
+
 	FILE* fp = ::_wpopen(batName.c_str(), L"rt");
 	if (!fp) {
 		THROW_APP_EXCEPTION("batch execution failed.");
@@ -89,12 +105,11 @@ std::list<std::wstring> BatchCommand::invokeAndGetLines()
 //後始末
 BatchCommand::~BatchCommand() noexcept(false)
 {
-	// del /F /Q %1$s > NUL 2>&1
-	const std::wstring format(loadString(IDS_DEL_CMD));
-	if (!format.empty() && !batName.empty() && ::PathFileExists(batName.c_str())) {
-		const size_t requiredLength = ::_scwprintf_p(format.c_str(), batName.c_str());
+	if (!batName.empty() && ::PathFileExists(batName.c_str())) {
+		const WCHAR format[] = L"del /F /Q %1$s > NUL 2>&1";
+		const size_t requiredLength = ::_scwprintf_p(format, batName.c_str());
 		std::wstring delBatCmd(requiredLength, '\0');
-		const size_t length = ::_swprintf_p(&*delBatCmd.begin(), delBatCmd.capacity(), format.c_str(), batName.c_str());
+		const size_t length = ::_swprintf_p(&*delBatCmd.begin(), delBatCmd.capacity(), format, batName.c_str());
 		delBatCmd._Eos(length);
 		::_wsystem(delBatCmd.c_str());
 	}
