@@ -14,7 +14,7 @@ file(GLOB testSources *.cpp)
 file(GLOB testHeaders *.h)
 
 # Add source to this project's executable.
-add_executable(${testName} ${testHeaders} ${testSources})
+add_executable(${testName} ${testHeaders} ${testSources} ${resourceScripts})
 
 # add definitions
 target_compile_definitions(${testName} PUBLIC _CONSOLE UNICODE _UNICODE)

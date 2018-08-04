@@ -27,6 +27,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDR_CMD_GET_PR              BatchCommands          "../res/bat_get_pr.cmd"
 IDR_CMD_ENUM_REMOTES        BatchCommands          "../res/bat_enum_remotes.cmd"
 IDR_CMD_ENUM_BRANCHS        BatchCommands          "../res/bat_enum_branchs.cmd"
+IDR_CMD_CHECKOUT_BRANCH     BatchCommands          "../res/bat_checkout_branch.cmd"
 
 /////////////////////////////////////////////////////////////////////////////
 //

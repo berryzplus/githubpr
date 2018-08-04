@@ -6,16 +6,11 @@
 
 
 PrivateProfile::PrivateProfile(_In_ const std::wstring &profileName)
-	: _profileName(profileName.c_str())
-	, _buffer(0x100, '\0')
+	: _profileName(profileName)
 {
-	//初期値をセットする
-	_buffer._Eos(0x100);
 }
 
 PrivateProfile::PrivateProfile(_Inout_ _Myt &&other) noexcept
-	: _profileName(NULL)
-	, _buffer()
 {
 	*this = std::move(other);
 }
@@ -23,41 +18,50 @@ PrivateProfile::PrivateProfile(_Inout_ _Myt &&other) noexcept
 PrivateProfile& PrivateProfile::operator = (_Inout_ _Myt &&rhs) noexcept
 {
 	std::swap(_profileName, rhs._profileName);
-	std::swap(_buffer, rhs._buffer);
 	return *this;
 }
 
-std::wstring PrivateProfile::getString(_In_z_ LPCWSTR appName, _In_z_ LPCWSTR keyName, _In_opt_z_ LPCWSTR pDefault)
+std::wstring PrivateProfile::getString(
+	_In_z_ LPCWSTR appName,
+	_In_z_ LPCWSTR keyName,
+	_In_opt_z_ LPCWSTR pDefault,
+	_Inout_opt_ std::wstring &buffer
+) const
 {
+	// 空バッファでもbegin()が失敗しないように…。
+	if (buffer.empty()) {
+		buffer.assign(1, '\0');
+	}
+
 	SIZE_T cbLoad = 0;
 	for (;;) {
 		
 		// バッファから生ポインタとサイズ値を取り出す
-		WCHAR* buffer = &*_buffer.begin();
-		DWORD capacity = static_cast<DWORD>(_buffer.capacity());
+		WCHAR* pszBuffer = &*buffer.begin();
+		const DWORD capacity = static_cast<DWORD>(buffer.capacity());
 
 		// INIファイルの項目を取得
-		cbLoad = ::GetPrivateProfileString(appName, keyName, pDefault, buffer, capacity, _profileName);
+		cbLoad = ::GetPrivateProfileString(appName, keyName, pDefault, pszBuffer, capacity, _profileName.c_str());
 
 		// メモリが十分に足りていた場合
 		if (cbLoad + 1 < capacity) {
-			buffer[cbLoad] = '\0'; //NUL終端する
+			buffer._Eos(cbLoad); //NUL終端する
 			break;
 		}
 
 		// メモリの再確保を行う
 		const SIZE_T cbNewBuffer = (capacity ^ 0xFFUL) * 2;
-		_buffer.reserve(cbNewBuffer);
-		if (_buffer.capacity() < cbNewBuffer) {
+		buffer.reserve(cbNewBuffer);
+		if (buffer.capacity() < cbNewBuffer) {
 			THROW_APP_EXCEPTION("can't read profile(realloc failed).");
 		}
 	}
-	return std::wstring(_buffer, 0, cbLoad);
+	return std::wstring(buffer, 0, cbLoad);
 }
 
 void PrivateProfile::writeString(_In_z_ LPCWSTR appName, _In_z_ LPCWSTR keyName, _In_z_ LPCWSTR value)
 {
-	if (!::WritePrivateProfileString(appName, keyName, value, _profileName)) {
+	if (!::WritePrivateProfileString(appName, keyName, value, _profileName.c_str())) {
 		THROW_APP_EXCEPTION("can't write profile.");
 	}
 }

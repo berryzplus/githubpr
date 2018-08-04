@@ -73,7 +73,7 @@ std::wstring GitHubPrApp::_initSetting(
 	std::wstring setting = getEnvStr(keyName);
 	if (setting.empty()) {
 		// get profile variable.
-		setting = profile.getString(GITHUB_PR, keyName);
+		setting = profile.getString(GITHUB_PR, keyName, L"", profileBuffer);
 		if (setting.empty()) {
 			setting = std::move(func());
 			if (!skipSave) {

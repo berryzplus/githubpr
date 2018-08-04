@@ -1,0 +1,9 @@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: LibGitHubPR
+Description: GitHubPR Test Library
+Version: @PROJECT_VERSION@
+URL: https://github.com/berryzplus/githubpr
+Libs: -L${libdir} -lgithubpr 
+Cflags: -I${includedir}
