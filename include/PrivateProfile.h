@@ -15,7 +15,7 @@ public:
 		_In_z_ LPCWSTR appName,
 		_In_z_ LPCWSTR keyName,
 		_In_opt_z_ LPCWSTR pDefault = L"",
-		_Inout_opt_ std::wstring &buffer = std::wstring()
+		_Inout_opt_ std::wstring* pstrBuffer = NULL
 	) const;
 	void writeString(
 		_In_z_ LPCWSTR appName,
