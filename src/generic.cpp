@@ -12,7 +12,7 @@ std::wstring getEnvStr(_In_z_ LPCWSTR pszVarName)
 		::_wgetenv_s(&requiredSize, &*varStr.begin(), requiredSize, pszVarName);
 		if (0 < requiredSize)
 		{
-			varStr._Eos(requiredSize - 1);
+			varStr.assign(varStr.c_str(), requiredSize - 1);
 			return std::move(varStr);
 		}
 	}
@@ -106,6 +106,6 @@ std::wstring convertMbsToWString(_In_reads_z_(cchMbString) LPCSTR pszMbString, _
 		pszMbString, static_cast<int>(cchMbString),
 		&*content.begin(), static_cast<int>(content.capacity())
 	);
-	content._Eos(nwRet);
+	content.assign(content.c_str(), nwRet);
 	return std::move(content);
 }
