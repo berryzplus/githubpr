@@ -34,7 +34,7 @@ private:
 		WCHAR fnTemplate[MAX_PATH] = { 0 };
 		::wcscpy_s(fnTemplate, getEnvStr(L"TEMP").c_str());
 		::wcscat_s(fnTemplate, L"\\prXXXXXX");
-		::_wmktemp_s(fnTemplate);
+		::_wmktemp_s(fnTemplate, _countof(fnTemplate) - 1);
 		::wcscat_s(fnTemplate, L".ini");
 		return std::wstring(fnTemplate);
 	}
