@@ -5,10 +5,12 @@ cmake_minimum_required (VERSION 3.8)
 
 include(GNUInstallDirs)
 
-# CMake compile with /MT instead of /MD
-# https://stackoverflow.com/questions/14172856/cmake-compile-with-mt-instead-of-md
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+  # CMake compile with /MT instead of /MD
+  # https://stackoverflow.com/questions/14172856/cmake-compile-with-mt-instead-of-md
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+endif(CMAKE_GENERATOR MATCHES "Visual Studio")
 
 
 # setup pre-compiled header
@@ -54,6 +56,8 @@ target_use_pre_compile_header(${projectName} StdAfx.h src/StdAfx.cpp)
 
 # add library modules
 target_link_libraries(${projectName} Shlwapi.lib)
+
+set(CMAKE_RC_FLAGS "-c utf8")
 
 # create solution folder
 set_target_properties(${projectName} PROPERTIES FOLDER executable)
