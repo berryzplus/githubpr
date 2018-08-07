@@ -31,10 +31,11 @@ std::wstring PrivateProfile::getString(
 	std::unique_ptr<std::wstring> internalBuffer;
 	if (pstrBuffer == nullptr) {
 		internalBuffer = std::unique_ptr<std::wstring>(new std::wstring());
+		pstrBuffer = &*internalBuffer;
 	}
 	// 空バッファでもbegin()が失敗しないように…。
 	if (pstrBuffer->empty()) {
-		pstrBuffer->assign(1, '\0');
+		pstrBuffer->assign(0x800, '\0');
 	}
 
 	WCHAR* buffer = nullptr;
