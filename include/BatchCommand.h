@@ -20,7 +20,7 @@ public:
 public:
 	const std::wstring& GetName() const noexcept { return batName; }
 	const std::wstring& GetContent() const noexcept { return batContent; }
-	std::wifstream invokeAndGetStream();
+	std::unique_ptr<std::wistream> invokeAndGetStream();
 	std::list<std::wstring> invokeAndGetLines();
 
 private:

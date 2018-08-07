@@ -4,6 +4,10 @@
 
 #include "generic.h"
 
+#ifdef __MINGW32__
+#include <ext/stdio_filebuf.h>
+#endif /* __MINGW32__ */
+
 
 BatchCommand::BatchCommand(_In_ WORD wBatchResourceId)
 {
@@ -52,13 +56,13 @@ std::wstring BatchCommand::loadBatchContent(_In_ WORD wBatchResourceId)
 }
 
 //バッチを実行してストリームを取得する
-std::wifstream BatchCommand::invokeAndGetStream()
+std::unique_ptr<std::wistream> BatchCommand::invokeAndGetStream()
 {
 	if (batName.empty()) {
 		THROW_APP_EXCEPTION("batch has no content.");
 	}
 
-	std::wofstream os(batName);
+	std::wofstream os(batName.c_str());
 	os.write(batContent.c_str(), batContent.length());
 	os.close();
 
@@ -66,7 +70,13 @@ std::wifstream BatchCommand::invokeAndGetStream()
 	if (!fp) {
 		THROW_APP_EXCEPTION("batch execution failed.");
 	}
-	return std::wifstream(fp);
+
+#ifdef _MSC_VER
+	return std::unique_ptr<std::wistream>(new std::wifstream(fp));
+#else
+	auto *pfb = new __gnu_cxx::stdio_filebuf<WCHAR>(fp, std::ios_base::in);
+	return std::unique_ptr<std::wistream>(new std::wistream((std::basic_filebuf<WCHAR>*)pfb));
+#endif
 }
 
 std::list<std::wstring> BatchCommand::invokeAndGetLines()
@@ -89,15 +99,15 @@ std::list<std::wstring> BatchCommand::invokeAndGetLines()
 		}
 	};
 	std::unique_ptr<wctypeLinemode> mytypeHolder(std::make_unique<wctypeLinemode>(1));
-	std::wifstream is(invokeAndGetStream());
+	std::unique_ptr<std::wistream> is(invokeAndGetStream());
 	std::locale x(std::locale::classic(), mytypeHolder.get());
-	is.imbue(x);
+	is->imbue(x);
 
-	std::istream_iterator<std::wstring, WCHAR> lineIter(is);
+	std::istream_iterator<std::wstring, WCHAR> lineIter(*is);
 	std::istream_iterator<std::wstring, WCHAR> eos;
 	std::list<std::wstring> lines;
 	std::copy(lineIter, eos, std::back_inserter(lines));
-	is.close();
+	is.reset(nullptr);
 
 	return std::move(lines);
 }
@@ -106,11 +116,10 @@ std::list<std::wstring> BatchCommand::invokeAndGetLines()
 BatchCommand::~BatchCommand() noexcept(false)
 {
 	if (!batName.empty() && ::PathFileExists(batName.c_str())) {
-		const WCHAR format[] = L"del /F /Q %1$s > NUL 2>&1";
-		const size_t requiredLength = ::_scwprintf_p(format, batName.c_str());
+		const WCHAR format[] = L"del /F /Q %s > NUL 2>&1";
+		const size_t requiredLength = ::_scwprintf(format, batName.c_str());
 		std::wstring delBatCmd(requiredLength, '\0');
-		const size_t length = ::_swprintf_p(&*delBatCmd.begin(), delBatCmd.capacity(), format, batName.c_str());
-		delBatCmd._Eos(length);
+		const size_t length = ::swprintf_s(&*delBatCmd.begin(), delBatCmd.capacity(), format, batName.c_str());
 		::_wsystem(delBatCmd.c_str());
 	}
 }
