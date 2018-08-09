@@ -109,3 +109,29 @@ std::wstring convertMbsToWString(_In_reads_z_(cchMbString) LPCSTR pszMbString, _
 	content.assign(content.c_str(), nwRet);
 	return std::move(content);
 }
+
+// convert wide string to multi-byte string.
+std::string convertWcsToString(_In_reads_z_(cchWcString) LPCWSTR pszWcString, _In_ SIZE_T cchWcString)
+{
+	if (INT_MAX < cchWcString) {
+		throw std::invalid_argument("cchWcString is too large.");
+	}
+	const int nChars = ::WideCharToMultiByte(
+		CP_ACP, 0,
+		pszWcString, static_cast<int>(cchWcString),
+		nullptr, 0,
+		NULL, NULL
+	);
+	if (0 == nChars) {
+		return std::string();
+	}
+	std::string content(nChars, '\0');
+	const int nRet = ::WideCharToMultiByte(
+		CP_ACP, 0,
+		pszWcString, static_cast<int>(cchWcString),
+		&*content.begin(), static_cast<int>(content.capacity()),
+		NULL, NULL
+	);
+	content.assign(content.c_str(), nRet);
+	return std::move(content);
+}

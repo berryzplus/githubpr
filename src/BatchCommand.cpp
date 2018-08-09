@@ -62,7 +62,11 @@ std::unique_ptr<std::wistream> BatchCommand::invokeAndGetStream()
 		THROW_APP_EXCEPTION("batch has no content.");
 	}
 
+#ifdef _MSC_VER
 	std::wofstream os(batName.c_str());
+#else
+	std::wofstream os(convertWcsToString(batName.c_str(), batName.length()));
+#endif
 	os.write(batContent.c_str(), batContent.length());
 	os.close();
 
