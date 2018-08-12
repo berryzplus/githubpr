@@ -1,2 +1,2 @@
 @echo off
-git remote
+%GIT% remote

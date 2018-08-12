@@ -1,6 +1,3 @@
 @echo off
-git checkout %BRANCH_NAME% > NUL 2>&1
-IF ERRORLEVEL 1 (
-) ELSE (
-  ECHO %BRANCH_NAME%
-)
+%GIT% checkout %BRANCH_NAME% > NUL 2>&1
+IF NOT ERRORLEVEL 1 ECHO %BRANCH_NAME%

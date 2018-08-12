@@ -18,10 +18,19 @@ const WCHAR HOME_BRANCH[] = L"HOME_BRANCH";
 const WCHAR BRANCH_PREFIX[] = L"BRANCH_PREFIX";
 const WCHAR PR_NUMBER[] = L"PR_NUMBER";
 
+#include <sstream>
 
 void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 {
+	constexpr bool skipSave = true;
+
 	::SetConsoleTitle(GITHUB_PR);
+
+	std::wstring gitCommandDir(_getGitCommandDir());
+	if (!gitCommandDir.empty()) {
+		std::wstring git = (L"\"" + gitCommandDir + L"\\git.exe\"");
+		setEnvStr(L"GIT", git.c_str());
+	}
 
 	std::wstring curDir(targetDir);
 	for (;;) {
@@ -46,8 +55,6 @@ void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 	std::wstring profileName = curDir + PROFILE_SUFFIX;
 	profile = std::move(PrivateProfile(profileName));
 
-	constexpr bool skipSave = true;
-	gitCommandDir = _initSetting(GIT_COMMAND_DIR, [this]() {return _getGitCommandDir(); }, skipSave);
 	gitRemoteName = _initSetting(GIT_REMOTE_NAME, [this]() {return _getRemoteName(); }, skipSave);
 	branchPrefix = _initSetting(BRANCH_PREFIX, [this]() {return _getBranchPrefix(); }, skipSave);
 	prNumber = _initSetting(PR_NUMBER, [this]() {return _getPrNumber(); }, skipSave);
@@ -55,7 +62,9 @@ void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 	{
 		BatchCommand cmd(IDR_CMD_CHECKOUT_BRANCH);
 		auto retList = cmd.invokeAndGetLines();
-		currentBranch = std::move(retList.back());
+		if (!retList.empty()) {
+			currentBranch = retList.back();
+		}
 	}
 	if (!currentBranch.empty()) {
 		setEnvStr(L"CURRENT_BRANCH", currentBranch.c_str());
@@ -97,11 +106,6 @@ std::wstring GitHubPrApp::_getGitCommandDir() const
 	std::wstring gitCommandDir = programFiles + COMMAND_DIR_SUFFIX;
 	if (!::PathFileExists(gitCommandDir.c_str())) {
 		THROW_APP_EXCEPTION("GNU Git not found.");
-	}
-	std::wstring path = getEnvStr(L"PATH");
-	if (0 != ::_wcsnicmp(gitCommandDir.c_str(), path.c_str(), gitCommandDir.length())) {
-		path = gitCommandDir + L';' + path;
-		setEnvStr(L"PATH", path.c_str());
 	}
 	return std::move(gitCommandDir);
 }

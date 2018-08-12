@@ -12,7 +12,6 @@ extern const WCHAR GITHUB_PR[];
 class GitHubPrApp {
 	PrivateProfile profile;
 	std::wstring profileBuffer;
-	std::wstring gitCommandDir;
 	std::wstring gitRemoteName;
 	std::wstring homeBranch;
 	std::wstring branchPrefix;

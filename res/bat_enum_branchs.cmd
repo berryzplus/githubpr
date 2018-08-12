@@ -1,2 +1,2 @@
 @echo off
-git branch --list
+%GIT% branch --list
