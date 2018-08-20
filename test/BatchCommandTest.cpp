@@ -11,13 +11,6 @@ TEST(BatchCommandTest, constructWithNoArg)
 	ASSERT_TRUE(cmd.GetContent().empty());
 }
 
-TEST(BatchCommandTest, constructWithResource)
-{
-	BatchCommand cmd(IDR_CMD_CHECKOUT_BRANCH);
-	EXPECT_FALSE(cmd.GetName().empty());
-	EXPECT_FALSE(cmd.GetContent().empty());
-}
-
 TEST(BatchCommandTest, constructWithCmdEcho)
 {
 	const WCHAR content[] = L"@echo test";
@@ -25,11 +18,6 @@ TEST(BatchCommandTest, constructWithCmdEcho)
 	EXPECT_FALSE(cmd.GetName().empty());
 	EXPECT_FALSE(cmd.GetContent().empty());
 	ASSERT_STREQ(content, cmd.GetContent().c_str());
-}
-
-TEST(BatchCommandTest, constructWithInvalidResource)
-{
-	ASSERT_THROW({ BatchCommand cmd((WORD)0xFFFFu); }, std::runtime_error);
 }
 
 TEST(BatchCommandTest, executeBatchWithoutContent)

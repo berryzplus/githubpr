@@ -9,12 +9,6 @@
 #endif /* __MINGW32__ */
 
 
-BatchCommand::BatchCommand(_In_ WORD wBatchResourceId)
-{
-	batContent = loadBatchContent(wBatchResourceId);
-	batName = generateBatchName();
-}
-
 BatchCommand::BatchCommand(_In_opt_ const std::wstring& batchContent)
 {
 	batContent = std::move(batchContent);
@@ -31,28 +25,6 @@ std::wstring BatchCommand::generateBatchName()
 	::_wmktemp_s(fnTemplate);
 	::wcscat_s(fnTemplate, L".cmd");
 	return std::wstring(fnTemplate);
-}
-
-// リソースからバッチ内容を読み込む
-std::wstring BatchCommand::loadBatchContent(_In_ WORD wBatchResourceId)
-{
-	HRSRC hres = ::FindResource(NULL, MAKEINTRESOURCE(wBatchResourceId), (LPCWSTR)L"BatchCommands");
-	if (!hres) {
-		THROW_APP_EXCEPTION("resource not found.");
-	}
-	const SIZE_T cbResData = ::SizeofResource(NULL, hres);
-	HGLOBAL hResData = ::LoadResource(NULL, hres);
-	if (!hResData) {
-		THROW_APP_EXCEPTION("load resource failed.");
-	}
-	LPCSTR pResData = static_cast<LPSTR>(::LockResource(hResData));
-	if (!pResData) {
-		THROW_APP_EXCEPTION("lock resource failed.");
-	}
-	std::wstring batchContent(convertMbsToWString(pResData, cbResData));
-	UnlockResource(hResData);
-
-	return std::move(batchContent);
 }
 
 //バッチを実行してストリームを取得する

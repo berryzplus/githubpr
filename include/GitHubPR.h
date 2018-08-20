@@ -13,10 +13,9 @@ class GitHubPrApp {
 	PrivateProfile profile;
 	std::wstring profileBuffer;
 	std::wstring gitRemoteName;
-	std::wstring homeBranch;
 	std::wstring branchPrefix;
 	std::wstring prNumber;
-	std::wstring currentBranch;
+	bool branchNameExists;
 
 public:
 	void initSettings(_In_ const std::wstring &targetDir);

@@ -22,6 +22,7 @@ const WCHAR PR_NUMBER[] = L"PR_NUMBER";
 
 void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 {
+	constexpr bool saveEnvStr = false;
 	constexpr bool skipSave = true;
 
 	::SetConsoleTitle(GITHUB_PR);
@@ -55,20 +56,17 @@ void GitHubPrApp::initSettings(_In_ const std::wstring &targetDir)
 	std::wstring profileName = curDir + PROFILE_SUFFIX;
 	profile = std::move(PrivateProfile(profileName));
 
-	gitRemoteName = _initSetting(GIT_REMOTE_NAME, [this]() {return _getRemoteName(); }, skipSave);
+	gitRemoteName = _initSetting(GIT_REMOTE_NAME, [this]() {return _getRemoteName(); }, saveEnvStr);
 	branchPrefix = _initSetting(BRANCH_PREFIX, [this]() {return _getBranchPrefix(); }, skipSave);
 	prNumber = _initSetting(PR_NUMBER, [this]() {return _getPrNumber(); }, skipSave);
 
 	{
-		BatchCommand cmd(IDR_CMD_CHECKOUT_BRANCH);
+		BatchCommand cmd(L"@%GIT% checkout %BRANCH_NAME% > NUL 2>&1\r\n@ECHO %ERRORLEVEL%");
 		auto retList = cmd.invokeAndGetLines();
-		if (!retList.empty()) {
-			currentBranch = retList.back();
+		if (retList.empty()) {
+			THROW_APP_EXCEPTION("git checkout may not work correctly.");
 		}
-	}
-	if (!currentBranch.empty()) {
-		setEnvStr(L"CURRENT_BRANCH", currentBranch.c_str());
-		homeBranch = _initSetting(HOME_BRANCH, [this]() {return _getHomeBranch(); }, skipSave);
+		branchNameExists = retList.front() == L"0";
 	}
 }
 
@@ -114,7 +112,7 @@ std::wstring GitHubPrApp::_getRemoteName() const
 {
 	std::list<std::wstring> remotes;
 	{
-		BatchCommand cmd(IDR_CMD_ENUM_REMOTES);
+		BatchCommand cmd(L"@%GIT% remote");
 		remotes = cmd.invokeAndGetLines();
 		remotes.remove(L"");
 	}
@@ -174,7 +172,7 @@ std::wstring GitHubPrApp::_getHomeBranch() const
 {
 	std::list<std::wstring> branchs;
 	{
-		BatchCommand cmd(IDR_CMD_ENUM_BRANCHS);
+		BatchCommand cmd(L"@%GIT% branch --list");
 		branchs = cmd.invokeAndGetLines();
 		branchs.remove(L"");
 		std::wregex reBranch(L"^\\*?\\s+(.+)$");
@@ -218,8 +216,18 @@ std::wstring GitHubPrApp::_getHomeBranch() const
 
 void GitHubPrApp::executeBatch() const
 {
+	//実行するコマンドを組み立てる
+	std::wostringstream os;
+	if (!branchNameExists) {
+		os << L"@%GIT% fetch %GIT_REMOTE_NAME% pull/%PR_NUMBER%/head:%BRANCH_NAME%" << std::endl;
+		os << L"@%GIT% checkout %BRANCH_NAME%" << std::endl;
+	}
+	else {
+		os << L"@%GIT% pull %GIT_REMOTE_NAME% pull/%PR_NUMBER%/head" << std::endl;
+	}
+
 	//バッチファイルを実行する
-	BatchCommand cmd(IDR_CMD_GET_PR);
+	BatchCommand cmd(os.str());
 	auto lines(cmd.invokeAndGetLines());
 	std::for_each(lines.cbegin(), lines.cend(), [](const std::wstring &line) {std::wcout << line << std::endl; });
 }

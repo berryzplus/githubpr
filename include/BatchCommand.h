@@ -9,7 +9,6 @@ class BatchCommand {
 	typedef BatchCommand _Myt;
 
 public:
-	BatchCommand(_In_ WORD wBatchResourceId);
 	BatchCommand(_In_opt_ const std::wstring& batchContent = L"");
 	BatchCommand(_Inout_ _Myt &&other) = delete;
 	_Myt& operator = (_Inout_ _Myt &&rhs) = delete;

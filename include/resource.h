@@ -2,10 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by Win32Project1.rc
 //
-#define IDR_CMD_GET_PR                  101
-#define IDR_CMD_ENUM_REMOTES            102
-#define IDR_CMD_ENUM_BRANCHS            103
-#define IDR_CMD_CHECKOUT_BRANCH         104
 #define IDS_ENTER_PRNUMBER              105
 #define IDS_ENTER_BRANCH                106
 #define IDS_ENTER_REMOTE                107
